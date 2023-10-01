@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alignment-harness"
+version = "1.4.0"
+description = "Modular LLM Evaluation Harness & Automated Model-as-a-Judge Benchmark Engine"
+authors = [{name = "suchitne99", email = "suchit.ne99@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.5.0",
+    "typer>=0.9.0",
+    "rich>=13.7.0",
+    "numpy>=1.24.0",
+    "scipy>=1.11.0",
+    "httpx>=0.26.0",
+]
+
+[project.scripts]
+harness = "alignment_harness.cli:app"
+
+# v1.0.0 milestone
+
+# v1.4.0 finalized
