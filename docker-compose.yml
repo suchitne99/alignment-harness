@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  eval-harness:
+    build: .
+    volumes:
+      - ./benchmarks/results:/app/results
+    command: ["run", "--benchmark", "mmlu", "--model", "llama-3-8b-instruct"]
