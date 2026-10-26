@@ -10,13 +10,14 @@ class ModelElo(BaseModel):
     ties: int = 0
 
 class EloRatingEngine:
-    def __init__(self, k_factor: float = 32.0):
+    def __init__(self, k_factor: float = 32.0, base_elo: float = 1000.0):
         self.k_factor = k_factor
+        self.base_elo = base_elo
         self.ratings: Dict[str, ModelElo] = {}
 
     def get_or_create(self, name: str) -> ModelElo:
         if name not in self.ratings:
-            self.ratings[name] = ModelElo(model_name=name)
+            self.ratings[name] = ModelElo(model_name=name, elo=self.base_elo)
         return self.ratings[name]
 
     def record_match(self, a: str, b: str, winner: str):
@@ -26,5 +27,15 @@ class EloRatingEngine:
         act_a = 1.0 if winner == "model_a" else (0.5 if winner == "tie" else 0.0)
         pa.elo += self.k_factor * (act_a - exp_a)
         pb.elo += self.k_factor * ((1.0 - act_a) - (1.0 - exp_a))
+        if winner == "model_a":
+            pa.wins += 1
+            pb.losses += 1
+        elif winner == "model_b":
+            pb.wins += 1
+            pa.losses += 1
+        else:
+            pa.ties += 1
+            pb.ties += 1
 
-# K-factor decay
+    def get_leaderboard(self) -> List[ModelElo]:
+        return sorted(self.ratings.values(), key=lambda x: x.elo, reverse=True)
